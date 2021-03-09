@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import cruz.ricky.newsapi.databinding.ActivityMainBinding
+import cruz.ricky.newsapi.presentation.adapter.NewsAdapter
 import cruz.ricky.newsapi.presentation.viewmodel.NewsViewModel
 import cruz.ricky.newsapi.presentation.viewmodel.NewsViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
@@ -17,8 +18,10 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var newsViewModelFactory: NewsViewModelFactory
-    lateinit var newsViewModel: NewsViewModel
+    @Inject
+    lateinit var newsAdapter: NewsAdapter
 
+    lateinit var newsViewModel: NewsViewModel
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +34,7 @@ class MainActivity : AppCompatActivity() {
             nav_host_fragment.findNavController()
         )
 
-        newsViewModel =ViewModelProvider(this, newsViewModelFactory)
+        newsViewModel = ViewModelProvider(this, newsViewModelFactory)
             .get(NewsViewModel::class.java)
     }
 
