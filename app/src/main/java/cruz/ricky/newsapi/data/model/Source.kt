@@ -1,6 +1,5 @@
 package cruz.ricky.newsapi.data.model
 
-
 import com.google.gson.annotations.SerializedName
 
 data class Source(

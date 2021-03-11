@@ -27,5 +27,9 @@
         android:id="@+id/infoFragment"
         android:name="cruz.ricky.newsapi.InfoFragment"
         android:label="@string/info_fragment"
-        tools:layout="@layout/fragment_info" />
+        tools:layout="@layout/fragment_info" >
+        <argument
+            android:name="selected_article"
+            app:argType="cruz.ricky.newsapi.data.model.Article" />
+    </fragment>
 </navigation>
