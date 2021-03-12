@@ -1,6 +1,5 @@
 package cruz.ricky.newsapi.presentation.viewmodel
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
@@ -8,20 +7,22 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cruz.ricky.newsapi.data.model.APIResponse
 import cruz.ricky.newsapi.data.util.Resource
 import cruz.ricky.newsapi.domain.usecase.GetNewsHeadlinesUseCase
+import cruz.ricky.newsapi.domain.usecase.GetSearchedNewsUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class NewsViewModel(
     private val app: Application,
-    private val getNewsHeadlinesUseCase: GetNewsHeadlinesUseCase
+    private val getNewsHeadlinesUseCase: GetNewsHeadlinesUseCase,
+    private val getSearchedNewsUseCase: GetSearchedNewsUseCase
 ): AndroidViewModel(app) {
 
     val newsHeadLines: MutableLiveData<Resource<APIResponse>> = MutableLiveData()
+    val searchedNews: MutableLiveData<Resource<APIResponse>> = MutableLiveData()
 
     fun getNewsHeadLines(country: String, page: Int) = viewModelScope.launch(Dispatchers.IO) {
         newsHeadLines.postValue(Resource.Loading())
@@ -69,4 +70,20 @@ class NewsViewModel(
 
         return false
     }
+
+    fun searchNews(country: String, searchQuery: String, page: Int) = viewModelScope.launch(Dispatchers.IO) {
+        searchedNews.postValue(Resource.Loading())
+
+        try {
+            if (isNetworkAvailable(app)) {
+                val response = getSearchedNewsUseCase.execute(country, searchQuery, page)
+                searchedNews.postValue(response)
+            } else {
+                searchedNews.postValue(Resource.Error("Internet is not available"))
+            }
+        } catch (e: Exception) {
+            searchedNews.postValue(Resource.Error(e.message.toString()))
+        }
+    }
+
 }

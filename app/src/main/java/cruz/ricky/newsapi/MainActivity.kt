@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import cruz.ricky.newsapi.databinding.ActivityMainBinding
 import cruz.ricky.newsapi.presentation.adapter.NewsAdapter
@@ -29,9 +31,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.findNavController()
 
         binding.bottomNavView.setupWithNavController(
-            binding.navHostFragment.findNavController()
+            navController
         )
 
         newsViewModel = ViewModelProvider(this, newsViewModelFactory)
